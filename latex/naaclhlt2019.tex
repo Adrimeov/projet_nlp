@@ -17,6 +17,34 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{latexsym}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+
+\makeatletter
+\pgfdeclareshape{datastore}{
+  \inheritsavedanchors[from=rectangle]
+  \inheritanchorborder[from=rectangle]
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{base}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{north east}
+  \inheritanchor[from=rectangle]{east}
+  \inheritanchor[from=rectangle]{south east}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{south west}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{north west}
+  \backgroundpath{
+    %  store lower right in xa/ya and upper right in xb/yb
+    \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yb}}
+ }
+}
+\makeatother
 
 \usepackage{url}
 
@@ -82,9 +110,79 @@ Le but de l’exercice est de définir un modèle afin de prédire la similarit�
 \subsection{Définition de l'algorithme/méthode/technique}
 À faire.
 
+\subsubsection{Stacking des models}
+
+A ce stade, nous avons donc 3 modèles, issus du fine-tuning de models state-of-the-art. Nous avons alors tente une methode de stacking, pour combiner les resultats des trois modeles. Notre intuition était que les modeles devaient apprendre differement, et qu'en combinant leurs predictions nous ameliorerions leurs resultats.
+
+Nous avons tenté 2 approches différentes pour reunir les models:
+
+\begin{itemize}
+  \item Faire une moyenne des predictions des modeles;
+  \item Entrainer un réseau de neurones fast-forward, avec comme entrée les prédictions des autres modèles.
+\end{itemize}
+
+La première methode envisagé ne nécessitant pas plus d'explications, nous allons nous attarder sur la seconde.
+
+\paragraph{Méthodologie} Nous avons divisé nos données en deux ensembles: un premier, plus volumineux, sur lequel nous avons entrainé les 3 models SOTA, et un second, plus petit, sur lequel nous avons prédits les resultats des 3 sous-models, avant d'utiliser ces prédictions pour entrainer le modèle de stacking.
+
+\paragraph{Architecture} Nous avons utilisé un modèle assez simple, avec une couche cachée (figure \ref{fig:stacking:archi}). Notre intention étant d'avoir un modèle non-linéaire (sinon cela revenait à faire une moyenne pondérée), mais pas trop complexe, afin de pouvoir entrainer le modèle avec peu de données sans risque d'overfitting.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[
+  font=\sffamily,
+  every matrix/.style={ampersand replacement=\&,column sep=.2cm,row sep=.3cm},
+  layer/.style={draw,thick,rounded corners,fill=gray!3},
+  data/.style={draw,shape=datastore,inner sep=.3cm},
+  output/.style={draw,thick,circle,fill=green!20},
+  model/.style={draw,very thick,fill=gray!20},
+  dots/.style={gray,scale=2},
+  to/.style={->,>=stealth',shorten >=1pt,semithick,font=\sffamily\footnotesize},
+  every node/.style={align=center,inner sep=.2cm}]
+
+  % Position the nodes using a matrix layout
+  \matrix{
+    \& \node[output] (score) {s}; \& \\
+
+    \& \& \& \\
+
+    \& \node[layer] (output_layer) {Output Layer}; \& \\
+    \& \node[layer] (hidden_layer) {Hidden Layer}; \& \\
+
+    \& \& \& \\
+
+    \& \node[data] (sub_scores) {s1 | s2 | s3}; \& \\
+
+    \& \& \& \\
+
+    \node[model] (bert) {BERT};  \& \node[model] (roberta) {RoBERTa}; \& \node[model] (xlnet) {XLNet}; \\
+
+    \& \& \& \\
+
+    \& \node[data] (sentences) {input sentences}; \& \\
+  };
+
+  % Draw the arrows between the nodes and label them.
+  \draw[to] (output_layer) -- (score);
+  \draw[to] (hidden_layer) -- (output_layer);
+
+  \draw[to] (sub_scores) -- (hidden_layer);
+
+  \draw[to] (bert) -- node[midway,left] {s1} (sub_scores);
+  \draw[to] (roberta) -- node[midway,left] {s2} (sub_scores);
+  \draw[to] (xlnet) -- node[midway,right] {s3} (sub_scores);
+
+  \draw[to] (sentences) -- (bert);
+  \draw[to] (sentences) -- (roberta);
+  \draw[to] (sentences) -- (xlnet);
+\end{tikzpicture}
+\caption{Architecture du modèle de stacking} \label{fig:stacking:archi}
+\end{center}
+\end{figure}
+
 \subsection{Évaluation expérimentale }
 
-À faire. 
+À faire.
 
 \subsection{Ensemble de données, métriques et baselines }
 
