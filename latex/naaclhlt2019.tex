@@ -102,12 +102,14 @@ Les dernières années nous ont permis de témoigné d’avancées fulgurantes d
 
 
 \subsection{Définition de la tâche/objectif}
-Le but de l’exercice est de définir un modèle afin de prédire la similarité sémantique entre deux phrases, comme décrit la tâche Semantic Textual Similarity (STS). La motivation de STS est d’être en moyen de construire une représentation du sens d’une phrase. L’hypothèse est que cette représentation peut être utilisé pour diverses applications comme la traduction machine (MT), la question-réponse (QA), la recherche sémantique et bien d’autres. En effet, la comparaison sémantique entre deux phrases en elle même peut sembler une tâche futile, mais la méthodologie que nous avons implémentée pourra être utiliser dans diverses applications. L’ensemble de données avec lequel nous avons travaillés est STSbenchmark, l’ensemble de référence pour STS. L’ensemble contient 5749 d’enregistrements d'entraînement et 1379 de test. Chaque données contient deux phrases, un identifiant et un score de similarité situé entre 0 et 5 seulement pour les données d'entraînement. Un score de 5 indique que les deux phrases sont sémantiquement identique, 0 indique qu’il n’ watatatow
+Le but de l’exercice est de définir un modèle afin de prédire la similarité sémantique entre deux phrases, comme décrit la tâche Semantic Textual Similarity (STS). La motivation de STS est d’être en moyen de construire une représentation du sens d’une phrase. L’hypothèse est que cette représentation peut être utilisé pour diverses applications comme la traduction machine (MT), la question-réponse (QA), la recherche sémantique et bien d’autres \cite{Cer_2017}. En effet, la comparaison sémantique entre deux phrases en elle même peut sembler une tâche futile, mais la méthodologie que nous avons implémentée pourra être utiliser dans diverses applications.
+	L’ensemble de données avec lequel nous avons travaillés est STSbenchmark, l’ensemble de référence pour STS. L’ensemble contient 5749 d’enregistrements d'entraînement et 1379 de test. Chaque données contient deux phrases, un identifiant et un score de similarité situé entre 0 et 5 seulement pour les données d'entraînement. Un score de 5 indique que les deux phrases sont sémantiquement identique, 0 indique qu’il n’y a pas de relation. Cette mesure est calculée en moyennant le score de similarité que plusieurs juges ont donné à un couple de phrase. Pour cette tâche, nous avons donc une entrée deux phrases et sortie nous avons une valeur entre 0% et 100%.
+
 
 
 \subsection{Définition de l'algorithme/méthode/technique}
 
-Afin de favoriser un environnement collaboratif optimal, nous avons décidé d’utiliser la plateforme colab.research de Google. En plus de permettre le travail collaboratif, cet environnement nous donne accès gratuitement à des cartes graphiques de très bonne qualités. Par la suite, nous avons entamé une revue de la littérature afin de bien comprendre où en était l’état de l’art sur la tâche STS-B. Nous nous sommes rendu compte que le modèle ROBERTA est capable d’atteindre des taux de prédiction de 92 % \cite{roberta}. De plus, notre revue de la littérature nous a permis de mettre 
+Afin de favoriser un environnement collaboratif optimal, nous avons décidé d’utiliser la plateforme colab.research de Google. En plus de permettre le travail collaboratif, cet environnement nous donne accès gratuitement à des cartes graphiques de très bonne qualités. Par la suite, nous avons entamé une revue de la littérature afin de bien comprendre où en était l’état de l’art sur la tâche STS-B. Nous nous sommes rendu compte que le modèle ROBERTA est capable d’atteindre des taux de prédiction de 92 % \cite{roberta}. De plus, notre revue de la littérature nous a permis de mettre 
 
 
 \subsubsection{Stacking des models}
@@ -225,8 +227,8 @@ La première methode envisagé ne nécessitant pas plus d'explications, nous all
  
 
 %where \verb|naaclhlt2019| corresponds to a naaclhlt2019.bib file.
-%\bibliography{naaclhlt2019}
-%\bibliographystyle{acl_natbib}
+\bibliography{naaclhlt2019}
+\bibliographystyle{acl_natbib}
 
 \appendix
 
