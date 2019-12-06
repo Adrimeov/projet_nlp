@@ -106,7 +106,9 @@ Le but de l’exercice est de définir un modèle afin de prédire la similarit�
 	L’ensemble de données avec lequel nous avons travaillés est STSbenchmark, l’ensemble de référence pour STS. L’ensemble contient 5749 d’enregistrements d'entraînement et 1379 de test. Chaque données contient deux phrases, un identifiant et un score de similarité situé entre 0 et 5 seulement pour les données d'entraînement. Un score de 5 indique que les deux phrases sont sémantiquement identique, 0 indique qu’il n’y a pas de relation. Cette mesure est calculée en moyennant le score de similarité que plusieurs juges ont donné à un couple de phrase. Pour cette tâche, nous avons donc une entrée deux phrases et sortie nous avons une valeur entre 0% et 100%.
 
 \subsection{Revue de la littérature et état de l'art}
-Afin d'approfondir nos connaissances quant aux modèles qui constituent l'état de l'art actuelle, nous avons réalisé une revue de la littérature concernant la tâche Semantic Textual Similarity (STS). Pour ce faire, nous avons débuté nos recherches sur l'excellente base de donnée "paper with code" \cite{sota}. Ce site web permet de spécifier un jeux de donné utilisé en NLP et de générer automatiquement un leaderboard exposant les différents modèles ( et les articles scientifiques associés).
+Afin d'approfondir nos connaissances quant aux modèles qui constituent l'état de l'art actuelle, nous avons réalisé une revue de la littérature concernant la tâche Semantic Textual Similarity (STS). Pour ce faire, nous avons débuté nos recherches sur l'excellente base de donnée "paper with code" \cite{sota}. Ce site web permet de spécifier un jeux de donné utilisé en NLP et de générer automatiquement un leaderboard exposant les différents modèles ( et les articles scientifiques associés). Nous résumerons ici ces différents modèles afin de montrer notre niveau compréhension de ceux-ci. 
+
+\paragraph{T5-11B} Ce modèle
 
 
 	\begin{table}[]
