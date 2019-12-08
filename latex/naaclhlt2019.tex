@@ -157,6 +157,7 @@ XLNet cherche à prédire les mots selon l'ordre de la permutation. Si on consid
 
 De plus, XLNet encode l'information de position des tokens. Cette information est ensuite utilisée par le transformer, pour utiliser uniquement les embeddings des tokens qui précèdent celui a prédire, modifiant ainsi le système d'attention.
 
+Nous avons là aussi utilisé une version pré-entraînée de RoBERTa, avec une dernière couche fast-forward ajoutée.
 
 \subsubsection{Stacking des models}
 
