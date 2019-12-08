@@ -267,9 +267,9 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
 %
 \subsubsection{BERT}
 
-\paragraph{Hugging Face} Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, nous avons utilisé la librairie transformers(\cite{huggingface}). Cette librairie nous permet de récupérer un modèle state-of-the-art avec ses poids pré-entraînés sur des corpus énormes, et de le fine-tuner avec des nouvelles données, sur une nouvelle tâche.
+Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, nous avons utilisé la librairie transformers(\cite{huggingface}). Cette librairie nous permet de récupérer un modèle state-of-the-art avec ses poids pré-entraînés sur des corpus énormes, et de le fine-tuner avec des nouvelles données, sur une nouvelle tâche.
 
-\paragraph{Training} Nous avons donc fine-tuné BERT, en l'entrainant sur 13 époques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
+Nous avons donc fine-tuné BERT, en l'entrainant sur 13 époques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/bert-training.png}
@@ -277,14 +277,14 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
   \label{fig:bert:finetunning}
 \end{figure}
 
-\paragraph{Resultats} On obtient, avec BERT, un score très élevé, avec une corrélation sur les données de test de .877 (table \ref{table:models:results}).
+On obtient, avec BERT, un score très élevé, avec une corrélation sur les données de test de .877 (table \ref{table:models:results}).
 
 %
 \subsubsection{RoBERTa}
 
-\paragraph{Hugging Face} Nous avons ensuite cherché à fine-tuner RoBERTa, version améliorée de BERT, en utilisant encore une fois la librairie transformers(\cite{huggingface}).
+Nous avons ensuite cherché à fine-tuner RoBERTa, version améliorée de BERT, en utilisant encore une fois la librairie transformers(\cite{huggingface}).
 
-\paragraph{Training} Nous avons donc fine-tuné RoBERTa, en l'entrainant cette fois sur 10 époques, avec des batches de taille 8. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
+Nous avons donc fine-tuné RoBERTa, en l'entrainant cette fois sur 10 époques, avec des batches de taille 8. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/roberta-training.png}
@@ -292,14 +292,14 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
   \label{fig:roberta:finetunning}
 \end{figure}
 
-\paragraph{Resultats} On obtient, avec RoBERTa, un score légèrement meilleur que pour BERT, avec une corrélation sur les données de test de .891 (table \ref{table:models:results}), soit un gain de .014 par rapport à BERT.
+On obtient, avec RoBERTa, un score légèrement meilleur que pour BERT, avec une corrélation sur les données de test de .891 (table \ref{table:models:results}), soit un gain de .014 par rapport à BERT.
 
 %
 \subsubsection{XLNet}
 
-\paragraph{Hugging Face} Nous avons ensuite cherché à fine-tuner XLNet en utilisant à nouveau la librairie transformers(\cite{huggingface}).
+Nous avons ensuite cherché à fine-tuner XLNet en utilisant à nouveau la librairie transformers(\cite{huggingface}).
 
-\paragraph{Training} Nous avons donc fine-tuné XLNet, en l'entrainant sur X époques. Comme on peut le voire figure \ref{fig:xlnet:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, plus de 2h (table \ref{table:models:results}), XLNet étant beaucoup plus gros que BERT et RoBERTa.
+Nous avons donc fine-tuné XLNet, en l'entrainant sur X époques. Comme on peut le voire figure \ref{fig:xlnet:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, plus de 2h (table \ref{table:models:results}), XLNet étant beaucoup plus gros que BERT et RoBERTa.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/xlnet-training.png}
@@ -307,7 +307,7 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
   \label{fig:xlnet:finetunning}
 \end{figure}
 
-\paragraph{Resultats} On obtient, avec XLNet, un score similaire à celui de BERT, avec une corrélation de 0.884 (table \ref{table:models:results}) sur l'ensemble de test. Nous pensons que la taille du modèle le rends plus complexe à entraîner, mais qu'il pourrait avoir plus de potentiel si on l'entrainait plus longtemps, et avec plus de données.
+On obtient, avec XLNet, un score similaire à celui de BERT, avec une corrélation de 0.884 (table \ref{table:models:results}) sur l'ensemble de test. Nous pensons que la taille du modèle le rends plus complexe à entraîner, mais qu'il pourrait avoir plus de potentiel si on l'entrainait plus longtemps, et avec plus de données.
 
 %
 \subsubsection{Moyenne des modèles}
