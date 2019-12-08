@@ -134,6 +134,32 @@ Afin d'approfondir nos connaissances quant aux modèles qui constituent l'état 
 Afin de favoriser un environnement collaboratif optimal, nous avons décidé d’utiliser la plateforme colab.research de Google. En plus de permettre un travail collaboratif, cet environnement nous donne accès, gratuitement, à des cartes graphiques de très bonne qualités. Par la suite, nous avons entamé une revue de la littérature afin de bien comprendre où en était l’état de l’art sur la tâche STS-B. Nous nous sommes rendu compte que le modèle RoBERTa est capable d’atteindre des taux de prédiction de 92\% \cite{RoBERTa}. De plus, notre revue de la littérature nous a permis de mettre 
 
 
+\subsubsection{RoBERTa}
+
+RoBERTa~\cite{RoBERTa} est construit sur le même modèle que BERT, à quelques notables exceptions près. Tout d'abord, la tâche de prédiction de la phrase suivante, utilisée pour entraîner BERT, a été retirée. La taille des batches a été augmentée, de même que le taux d'apprentissage. De plus, RoBERTa a été entraîné sur beaucoup plus de données que BERT (144GB, là où BERT a été entraîné sur "seulement" 16GB de données), pendant plus longtemps. Ce modèle est venu améliorer l'état de l'art sur de nombreuses taches de TAL.
+
+De même que pour BERT, nous avons utilisé une version pré-entraînée de RoBERTa, à laquelle nous avons rajouté une dernière couche fast-forward, que nous avons fine-tuné pour notre problème.
+
+
+\subsubsection{XLNet}
+
+XLNet~\cite{yang2019xlnet} est venu introduire d'autres modifications à BERT, afin d'améliorer le modèle et son entraînement.
+
+La première modification a été, au lieu d'entrainer le modele en conservant l'ordre des mots dans la phrase (ou de les rentrer en ordre inverse), de permuter l'ordre des mots dans la phrase (Fig~\ref{fig:XLNet:permutations}). XLNet maximise alors la vraisemblance sur toutes les permutations d'une séquence.
+
+XLNet cherche à prédire les mots selon l'ordre de la permutation. Si on considère la phrase `New York est une ville', et que la permutation actuelle est [est, une, ville, New, York], XLNet calculera $log P(New | est~une~ville) + log P(York | New, est~une~ville)$, là où BERT n'aurait pas pu prendre en compte le token masqué `New' pour prédire `York', et aurait calculé  $log P(New | est~une~ville) + log P(York | est~une~ville)$. Cela permet à XLNet de ne pas avoir le défaut des tokens masqués dont l'information manque pour prédire le reste des tokens masqués.
+
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{resources/xlnet-permutations.png}
+  \caption{Illustration des permutations utilisées par XLNet pour s'entrainer}
+  \label{fig:XLNet:permutations}
+\end{figure}
+
+
+De plus, XLNet encode l'information de position des tokens. Cette information est ensuite utilisée par le transformer, pour utiliser uniquement les embeddings des tokens qui précèdent celui a prédire, modifiant ainsi le système d'attention.
+
+
 \subsubsection{Stacking des models}
 
 A ce stade, nous avons donc 3 modèles, issus du fine-tuning de models state-of-the-art. Nous avons alors tenté une méthode de stacking, pour combiner les résultats des trois modèles. Notre intuition était que les modèles devaient apprendre différemment, et qu'en combinant leurs predictions nous améliorerions leurs résultats.
@@ -412,9 +438,6 @@ Nous avons pu nous rendre compte, grâce à ce travail, de l'efficacité des mod
 \bibliographystyle{acl_natbib}
 
 \appendix
-
-
-
 
 
 \end{document}
