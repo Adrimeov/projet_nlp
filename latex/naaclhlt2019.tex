@@ -87,7 +87,7 @@
 %\end{Intro}
 
 \section{Introduction}
-Les dernières années nous ont permis de témoigner d’avancées fulgurantes dans le domaine du traitement automatique de la langue naturelle. Plus particulièrement, les machines sont désormais capables de performer aussi bien sinon mieux que les humains dans plusieurs tâches comme la traduction, la classification et la génération de texte. Ces avancées sont en grande partie expliquées par l’évolution très rapide des techniques utilisées pour réaliser de telles tâches. En effet, depuis l’élaboration des Bag-Of-Words, plusieurs techniques de plus en plus raffinées comme les RNN et les LSTM ont vue le jour \cite{lstm}. Cependant, ces techniques récursives se sont retrouvées dans l’ombre des nouveaux modèles faisant appel aux Transformers qui intègrent désormais des modules d’attention. Ce concept d’attention peux maintenant être implémenté tant dans des encodeurs que des décodeurs afin d’augmenter considérablement les performances des modèles. Toutefois, la véritable révolution provient d’une équipe de Google qui a utilisé le modèle d’encodeur du Tranformer afin de créer une architecture composée de mécanismes d’attention bidirectionnels multicouche : BERT. Dans ce papier, nous décrirons en détails comment nous avons utilisé ce modèle ainsi que certaines de ses variantes afin de résoudre le problème Kaggle dans le cadre du cours INF8460 : traitement automatique de langue naturelle. Il nous a été demandé de créer un modèle capable d’évaluer la similarité entre deux phrases. Pour ce faire, nous avons créé un ensemble composé de BERT, ROBERTA et XLNET. Nous avons ensuite inséré les résultats générés par ces modèles dans un feedfoward network afin de produire nos prédictions finales. À titre comparatif, nous avons aussi simplement moyenné ces résultats afin de générer nos prédictions. Nous avons réussi à atteindre un taux de classification de 90.06, ce qui au moment de la présentation de notre méthode nous permettait d'atteindre la première place.
+Les dernières années nous ont permis de témoigner d’avancées fulgurantes dans le domaine du traitement automatique de la langue naturelle. Plus particulièrement, les machines sont désormais capables de performer aussi bien sinon mieux que les humains dans plusieurs tâches comme la traduction, la classification et la génération de texte. Ces avancées sont en grande partie expliquées par l’évolution très rapide des techniques utilisées pour réaliser de telles tâches. En effet, depuis l’élaboration des Bag-Of-Words, plusieurs techniques de plus en plus raffinées comme les RNN et les LSTM ont vue le jour \cite{lstm}. Cependant, ces techniques récursives se sont retrouvées dans l’ombre des nouveaux modèles faisant appel aux Transformers qui intègrent désormais des modules d’attention. Ce concept d’attention peux maintenant être implémenté tant dans des encodeurs que des décodeurs afin d’augmenter considérablement les performances des modèles. Toutefois, la véritable révolution provient d’une équipe de Google qui a utilisé le modèle d’encodeur du Tranformer afin de créer une architecture composée de mécanismes d’attention bidirectionnels multicouche : BERT. Dans ce papier, nous décrirons en détails comment nous avons utilisé ce modèle ainsi que certaines de ses variantes afin de résoudre le problème Kaggle dans le cadre du cours INF8460 : traitement automatique de langue naturelle. Il nous a été demandé de créer un modèle capable d’évaluer la similarité entre deux phrases. Pour ce faire, nous avons créé un ensemble composé de BERT, RoBERTa et XLNet. Nous avons ensuite inséré les résultats générés par ces modèles dans un feedfoward network afin de produire nos prédictions finales. À titre comparatif, nous avons aussi simplement moyenné ces résultats afin de générer nos prédictions. Nous avons réussi à atteindre un taux de classification de 90.06, ce qui au moment de la présentation de notre méthode nous permettait d'atteindre la première place.
 
 %\section{Introduction}
 %
@@ -129,7 +129,7 @@ Afin d'approfondir nos connaissances quant aux modèles qui constituent l'état 
 
 \subsection{Définition de l'algorithme/méthode/technique}
 
-Afin de favoriser un environnement collaboratif optimal, nous avons décidé d’utiliser la plateforme colab.research de Google. En plus de permettre un travail collaboratif, cet environnement nous donne accès, gratuitement, à des cartes graphiques de très bonne qualités. Par la suite, nous avons entamé une revue de la littérature afin de bien comprendre où en était l’état de l’art sur la tâche STS-B. Nous nous sommes rendu compte que le modèle RoBERTa est capable d’atteindre des taux de prédiction de 92\% \cite{roberta}. De plus, notre revue de la littérature nous a permis de mettre 
+Afin de favoriser un environnement collaboratif optimal, nous avons décidé d’utiliser la plateforme colab.research de Google. En plus de permettre un travail collaboratif, cet environnement nous donne accès, gratuitement, à des cartes graphiques de très bonne qualités. Par la suite, nous avons entamé une revue de la littérature afin de bien comprendre où en était l’état de l’art sur la tâche STS-B. Nous nous sommes rendu compte que le modèle RoBERTa est capable d’atteindre des taux de prédiction de 92\% \cite{RoBERTa}. De plus, notre revue de la littérature nous a permis de mettre 
 
 
 \subsubsection{Stacking des models}
@@ -177,7 +177,7 @@ La première méthode envisagée ne nécessitant pas plus d'explications, nous a
 
     \& \& \& \\
 
-    \node[model] (bert) {BERT};  \& \node[model] (roberta) {RoBERTa}; \& \node[model] (xlnet) {XLNet}; \\
+    \node[model] (BERT) {BERT};  \& \node[model] (RoBERTa) {RoBERTa}; \& \node[model] (XLNet) {XLNet}; \\
 
     \& \& \& \\
 
@@ -190,13 +190,13 @@ La première méthode envisagée ne nécessitant pas plus d'explications, nous a
 
   \draw[to] (sub_scores) -- (hidden_layer);
 
-  \draw[to] (bert) -- node[midway,left] {s1} (sub_scores);
-  \draw[to] (roberta) -- node[midway,left] {s2} (sub_scores);
-  \draw[to] (xlnet) -- node[midway,right] {s3} (sub_scores);
+  \draw[to] (BERT) -- node[midway,left] {s1} (sub_scores);
+  \draw[to] (RoBERTa) -- node[midway,left] {s2} (sub_scores);
+  \draw[to] (XLNet) -- node[midway,right] {s3} (sub_scores);
 
-  \draw[to] (sentences) -- (bert);
-  \draw[to] (sentences) -- (roberta);
-  \draw[to] (sentences) -- (xlnet);
+  \draw[to] (sentences) -- (BERT);
+  \draw[to] (sentences) -- (RoBERTa);
+  \draw[to] (sentences) -- (XLNet);
 \end{tikzpicture}
 \caption{Architecture du modèle de stacking} \label{fig:stacking:archi}
 \end{center}
@@ -270,12 +270,12 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
 
 Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, nous avons utilisé la librairie transformers(\cite{huggingface}). Cette librairie nous permet de récupérer un modèle state-of-the-art avec ses poids pré-entraînés sur des corpus énormes, et de le fine-tuner avec des nouvelles données, sur une nouvelle tâche.
 
-Nous avons donc fine-tuné BERT, en l'entrainant sur 13 époques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
+Nous avons donc fine-tuné BERT, en l'entrainant sur 13 époques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:BERT:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{resources/bert-training.png}
+  \includegraphics[width=\linewidth]{resources/BERT-training.png}
   \caption{BERT fine-tuning over 13 epochs}
-  \label{fig:bert:finetunning}
+  \label{fig:BERT:finetunning}
 \end{figure}
 
 On obtient, avec BERT, un score très élevé, avec une corrélation sur les données de test de .877 (table \ref{table:models:results}).
@@ -285,12 +285,12 @@ On obtient, avec BERT, un score très élevé, avec une corrélation sur les don
 
 Nous avons ensuite cherché à fine-tuner RoBERTa, version améliorée de BERT, en utilisant encore une fois la librairie transformers(\cite{huggingface}).
 
-Nous avons donc fine-tuné RoBERTa, en l'entrainant cette fois sur 10 époques, avec des batches de taille 8. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
+Nous avons donc fine-tuné RoBERTa, en l'entrainant cette fois sur 10 époques, avec des batches de taille 8. Comme on peut le voire figure \ref{fig:BERT:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{resources/roberta-training.png}
-  \caption{ROBERTA fine-tuning over 10 epochs}
-  \label{fig:roberta:finetunning}
+  \includegraphics[width=\linewidth]{resources/RoBERTa-training.png}
+  \caption{RoBERTa fine-tuning over 10 epochs}
+  \label{fig:RoBERTa:finetunning}
 \end{figure}
 
 On obtient, avec RoBERTa, un score légèrement meilleur que pour BERT, avec une corrélation sur les données de test de .891 (table \ref{table:models:results}), soit un gain de .014 par rapport à BERT.
@@ -300,12 +300,12 @@ On obtient, avec RoBERTa, un score légèrement meilleur que pour BERT, avec une
 
 Nous avons ensuite cherché à fine-tuner XLNet en utilisant à nouveau la librairie transformers(\cite{huggingface}).
 
-Nous avons donc fine-tuné XLNet, en l'entrainant sur X époques. Comme on peut le voire figure \ref{fig:xlnet:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, plus de 2h (table \ref{table:models:results}), XLNet étant beaucoup plus gros que BERT et RoBERTa.
+Nous avons donc fine-tuné XLNet, en l'entrainant sur X époques. Comme on peut le voire figure \ref{fig:XLNet:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, plus de 2h (table \ref{table:models:results}), XLNet étant beaucoup plus gros que BERT et RoBERTa.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{resources/xlnet-training.png}
+  \includegraphics[width=\linewidth]{resources/XLNet-training.png}
   \caption{XLNet fine-tuning over 10 epochs}
-  \label{fig:xlnet:finetunning}
+  \label{fig:XLNet:finetunning}
 \end{figure}
 
 On obtient, avec XLNet, un score similaire à celui de BERT, avec une corrélation de 0.884 (table \ref{table:models:results}) sur l'ensemble de test. Nous pensons que la taille du modèle le rends plus complexe à entraîner, mais qu'il pourrait avoir plus de potentiel si on l'entrainait plus longtemps, et avec plus de données.
@@ -375,7 +375,7 @@ Une piste qui pourrait être envisagée, mais que nous n'avons pas pu essayer, e
     \& \& \& \\
     \& \& \& \\
 
-    \node[model] (bert) {BERT};  \& \node[model] (roberta) {RoBERTa}; \& \node[model] (xlnet) {XLNet}; \\
+    \node[model] (BERT) {BERT};  \& \node[model] (RoBERTa) {RoBERTa}; \& \node[model] (XLNet) {XLNet}; \\
 
     \& \& \& \\
 
@@ -386,13 +386,13 @@ Une piste qui pourrait être envisagée, mais que nous n'avons pas pu essayer, e
   \draw[to] (features) -- node[midway,left] {
   \textbf{h}} (score);
 
-  \draw[to] (bert) -- node[midway,left] {f11 | ... | f1b} (features);
-  \draw[to] (roberta) -- node[midway,middle] {f21 | ... | f2r} (features);
-  \draw[to] (xlnet) -- node[midway,right] {f31 | ... | f3x} (features);
+  \draw[to] (BERT) -- node[midway,left] {f11 | ... | f1b} (features);
+  \draw[to] (RoBERTa) -- node[midway,middle] {f21 | ... | f2r} (features);
+  \draw[to] (XLNet) -- node[midway,right] {f31 | ... | f3x} (features);
 
-  \draw[to] (sentences) -- (bert);
-  \draw[to] (sentences) -- (roberta);
-  \draw[to] (sentences) -- (xlnet);
+  \draw[to] (sentences) -- (BERT);
+  \draw[to] (sentences) -- (RoBERTa);
+  \draw[to] (sentences) -- (XLNet);
 \end{tikzpicture}
 \caption{Architecture du modèle de stacking sur les dernières couches cachées} \label{fig:stacking:archi_future}
 \end{center}
