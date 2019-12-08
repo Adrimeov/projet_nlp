@@ -269,7 +269,7 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
 
 \paragraph{Hugging Face} Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, nous avons utilisé la librairie transformers(\cite{huggingface}). Cette librairie nous permet de recupérer un modèle state-of-the-art avec ces poids pré-entraînés sur des corpus énormes, et de le fine-tuner avec des nouvelles données, et une nouvelle tâche.
 
-\paragraph{Training} Nous avons donc fine-tuné BERT, en l'entrainant sur 13 epoques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (#TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
+\paragraph{Training} Nous avons donc fine-tuné BERT, en l'entrainant sur 13 epoques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/bert-training.png}
@@ -338,7 +338,64 @@ Nous avons ensuite essayé de changer la répartition des données entre l'entra
 
 
 
-\section{Travaux futures et conclusion }
+\section{Travaux futurs et conclusion }
+
+%
+\subsubsection{Travaux futurs}
+
+Une piste qui pourrait etre envisagée, mais que nous n'avons pas pu essayer, est d'utiliser les dernières couches cachées des 3 sous models pour entrainer le modèle de stacking, au lieu de leur sortie (Fig.\ref{fig:stacking:archi_future}). On peut initialiser les poids de départ du réseau en concatenant ceux des sous modeles utilises, divises par le nombre de sous modeles (eq \ref{eq:stacking:future}); ainsi, le modele commence par predire la moyenne des sous modeles.
+
+\begin{equation}
+  h \leftarrow [h_{BERT} h_{RoBERTa} h_{XLNet}] / 3 \label{eq:stacking:future}
+\end{equation}
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}[
+  font=\sffamily,
+  every matrix/.style={ampersand replacement=\&,column sep=.2cm,row sep=.3cm},
+  layer/.style={draw,thick,rounded corners,fill=gray!3},
+  data/.style={draw,shape=datastore,inner sep=.3cm},
+  output/.style={draw,thick,circle,fill=green!20},
+  model/.style={draw,very thick,fill=gray!20},
+  dots/.style={gray,scale=2},
+  to/.style={->,>=stealth',shorten >=1pt,semithick,font=\sffamily\footnotesize},
+  every node/.style={align=center,inner sep=.2cm}]
+
+  % Position the nodes using a matrix layout
+  \matrix{
+    \& \node[output] (score) {s}; \& \\
+
+    \& \& \& \\
+    \& \& \& \\
+
+    \& \node[data] (features) {f11 | ... | f3x}; \& \node {(concatenation)}; \\
+
+    \& \& \& \\
+    \& \& \& \\
+
+    \node[model] (bert) {BERT};  \& \node[model] (roberta) {RoBERTa}; \& \node[model] (xlnet) {XLNet}; \\
+
+    \& \& \& \\
+
+    \& \node[data] (sentences) {input sentences}; \& \\
+  };
+
+  % Draw the arrows between the nodes and label them.
+  \draw[to] (features) -- node[midway,left] {
+  \textbf{h}} (score);
+
+  \draw[to] (bert) -- node[midway,left] {f11 | ... | f1b} (features);
+  \draw[to] (roberta) -- node[midway,middle] {f21 | ... | f2r} (features);
+  \draw[to] (xlnet) -- node[midway,right] {f31 | ... | f3x} (features);
+
+  \draw[to] (sentences) -- (bert);
+  \draw[to] (sentences) -- (roberta);
+  \draw[to] (sentences) -- (xlnet);
+\end{tikzpicture}
+\caption{Architecture du modèle de stacking sur les dernières couches cachées} \label{fig:stacking:archi_future}
+\end{center}
+\end{figure}
 
 \section*{Acknowledgments}
  
