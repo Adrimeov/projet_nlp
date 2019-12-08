@@ -171,9 +171,9 @@ Nous avons tenté 2 approches différentes pour réunir les models:
 
 La première méthode envisagée ne nécessitant pas plus d'explications, nous allons nous attarder sur la seconde.
 
-\paragraph{Méthodologie} Nous avons divisé nos données en deux ensembles: un premier, plus volumineux, sur lequel nous avons entraîné les 3 models SOTA, et un second, plus petit, sur lequel nous avons prédits les résultats des 3 sous-models, avant d'utiliser ces prédictions pour entraîner le modèle de stacking.
+Nous avons divisé nos données en deux ensembles: un premier, plus volumineux, sur lequel nous avons entraîné les 3 models SOTA, et un second, plus petit, sur lequel nous avons prédits les résultats des 3 sous-models, avant d'utiliser ces prédictions pour entraîner le modèle de stacking.
 
-\paragraph{Architecture} Nous avons utilisé un modèle assez simple, avec une couche cachée (figure \ref{fig:stacking:archi}). Notre intention étant d'avoir un modèle non-linéaire (sinon cela revenait à faire une simple moyenne pondérée), mais pas trop complexe, afin de pouvoir entraîner le modèle avec peu de données, sans risque d'overfitting.
+Nous avons utilisé un modèle assez simple, avec une couche cachée (figure \ref{fig:stacking:archi}). Notre intention étant d'avoir un modèle non-linéaire (sinon cela revenait à faire une simple moyenne pondérée), mais pas trop complexe, afin de pouvoir entraîner le modèle avec peu de données, sans risque d'overfitting.
 
 \begin{figure}
 \begin{center}
