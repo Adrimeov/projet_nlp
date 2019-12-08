@@ -87,7 +87,7 @@
 %\end{Intro}
 
 \section{Introduction}
-Les dernières années nous ont permis de témoigné d’avancées fulgurantes dans le domaine du traitement automatique de la langue naturel. Plus particulièrement, les machines sont désormais capables de performer aussi bien sinon mieux que les humains dans plusieurs tâches comme la traduction, la classification et la génération de texte. Ces avancées sont en grande partie expliquées par l’évolution très rapide des techniques utilisées pour réaliser de telles tâches. En effet, depuis l’élaboration des Bag-Of-Words, plusieurs techniques de plus en plus raffinées comme les RNN et les LSTM ont vue le jour \cite{lstm}. Cependant, ces techniques récursives se sont retrouver dans l’ombre des nouveaux modèles faisant appel aux Transformers qui intègrent désormais des modules d’attention. Ce concept d’attention peux maintenant être implémenté tant dans des encodeurs que des décodeurs afin d’augmenter considérablement les performances des modèles. Par contre, la véritable révolution provient d’une équipe de Google qui ont utilisé le modèle d’encodeur du Tranformer afin de créer une architecture composée de mécanismes d’attention bidirectionnels multicouche : BERT. Dans ce papier, nous décrirons en détails comment nous avons utilisé ce modèle ainsi que certaines de ses variantes afin de résoudre le problème Kaggle dans le cadre du cours INF8460 : traitement automatique de langue naturelle. Brièvement, il nous a été demandé de créer un modèle capable d’évaluer la similarité entre deux phrases. Pour ce faire, nous avons créer un ensemble composé de BERT, ROBERTA et XLNET. Nous avons ensuite inséré les résultats générés par ces modèles dans un feedfoward network afin de produire nos prédiction finales. À titre comparatif, nous avons aussi simplement moyenné ces résultats afin de générer nos prédictions. Nous avons réussi à atteindre un taux de classification de 90.0641, ce qui au moment de la rédaction de ce papier nous garantissait une première place. Ce résultat correspond aussi à l'état de l'art pour cette tâche. 
+Les dernières années nous ont permis de témoigner d’avancées fulgurantes dans le domaine du traitement automatique de la langue naturelle. Plus particulièrement, les machines sont désormais capables de performer aussi bien sinon mieux que les humains dans plusieurs tâches comme la traduction, la classification et la génération de texte. Ces avancées sont en grande partie expliquées par l’évolution très rapide des techniques utilisées pour réaliser de telles tâches. En effet, depuis l’élaboration des Bag-Of-Words, plusieurs techniques de plus en plus raffinées comme les RNN et les LSTM ont vue le jour \cite{lstm}. Cependant, ces techniques récursives se sont retrouvées dans l’ombre des nouveaux modèles faisant appel aux Transformers qui intègrent désormais des modules d’attention. Ce concept d’attention peux maintenant être implémenté tant dans des encodeurs que des décodeurs afin d’augmenter considérablement les performances des modèles. Par contre, la véritable révolution provient d’une équipe de Google qui a utilisé le modèle d’encodeur du Tranformer afin de créer une architecture composée de mécanismes d’attention bidirectionnels multicouche : BERT. Dans ce papier, nous décrirons en détails comment nous avons utilisé ce modèle ainsi que certaines de ses variantes afin de résoudre le problème Kaggle dans le cadre du cours INF8460 : traitement automatique de langue naturelle. Il nous a été demandé de créer un modèle capable d’évaluer la similarité entre deux phrases. Pour ce faire, nous avons créé un ensemble composé de BERT, ROBERTA et XLNET. Nous avons ensuite inséré les résultats générés par ces modèles dans un feedfoward network afin de produire nos prédictions finales. À titre comparatif, nous avons aussi simplement moyenné ces résultats afin de générer nos prédictions. Nous avons réussi à atteindre un taux de classification de 90.06, ce qui au moment de la présentation de notre méthode nous permettait d'atteindre la première place.
 
 %\section{Introduction}
 %
@@ -102,11 +102,11 @@ Les dernières années nous ont permis de témoigné d’avancées fulgurantes d
 
 
 \subsection{Définition de la tâche/objectif}
-Le but de l’exercice est de définir un modèle afin de prédire la similarité sémantique entre deux phrases, comme décrit la tâche Semantic Textual Similarity (STS). La motivation de STS est d’être en moyen de construire une représentation du sens d’une phrase. L’hypothèse est que cette représentation peut être utilisé pour diverses applications comme la traduction machine (MT), la question-réponse (QA), la recherche sémantique et bien d’autres \cite{Cer_2017}. En effet, la comparaison sémantique entre deux phrases en elle même peut sembler une tâche futile, mais la méthodologie que nous avons implémentée pourra être utiliser dans diverses applications.
-	L’ensemble de données avec lequel nous avons travaillés est STSbenchmark, l’ensemble de référence pour STS. L’ensemble contient 5749 d’enregistrements d'entraînement et 1379 de test. Chaque données contient deux phrases, un identifiant et un score de similarité situé entre 0 et 5 seulement pour les données d'entraînement. Un score de 5 indique que les deux phrases sont sémantiquement identique, 0 indique qu’il n’y a pas de relation. Cette mesure est calculée en moyennant le score de similarité que plusieurs juges ont donné à un couple de phrase. Pour cette tâche, nous avons donc une entrée deux phrases et sortie nous avons une valeur entre 0% et 100%.
+Le but de l’exercice est de définir un modèle afin de prédire la similarité sémantique entre deux phrases : il s'agit de la tâche de Semantic Textual Similarity (STS). La motivation derrière cette tâche de STS est d’être en mesure de construire une représentation du sens d’une phrase. L’hypothèse est que cette représentation peut être utilisée pour diverses applications comme la traduction machine (MT), les questions-réponses (QA), la recherche sémantique et bien d’autres \cite{Cer_2017}. En effet, la comparaison sémantique entre deux phrases en elle même peut sembler une tâche futile, mais la méthodologie que nous avons implémentée pourra être utilisée dans diverses applications.
+	L’ensemble de données avec lequel nous avons travaillé est STSbenchmark, l’ensemble de référence pour STS. L’ensemble contient 5749 enregistrements d'entraînement et 1379 de test. Chaque donnée contient deux phrases, un identifiant et, seulement pour les données d'entrainement, un score de similarité situé entre 0 et 5. Un score de 5 indique que les deux phrases sont sémantiquement identiques, 0 indique qu’il n’y a pas de relation. Cette mesure est calculée en moyennant les scores de similarité que plusieurs juges humains ont donnés à un couple de phrase. Pour cette tâche, nous avons donc une entrée de deux phrases, et en sortie nous avons une valeur entre 0\% et 100\%.
 
 \subsection{Revue de la littérature et état de l'art}
-Afin d'approfondir nos connaissances quant aux modèles qui constituent l'état de l'art actuelle, nous avons réalisé une revue de la littérature concernant la tâche Semantic Textual Similarity (STS). Pour ce faire, nous avons débuté nos recherches sur l'excellente base de donnée "paper with code" \cite{sota}. Ce site web permet de spécifier un jeux de donné utilisé en NLP et de générer automatiquement un leaderboard exposant les différents modèles ( et les articles scientifiques associés). Nous résumerons ici ces différents modèles afin de montrer notre niveau compréhension de ceux-ci. 
+Afin d'approfondir nos connaissances quant aux modèles qui constituent l'état de l'art actuel, nous avons réalisé une revue de la littérature concernant la tâche Semantic Textual Similarity (STS). Pour ce faire, nous avons débuté nos recherches sur la base de donnée "paper with code" \cite{sota}. Ce site web permet de spécifier un jeux de donné utilisé en NLP et de générer automatiquement un leaderboard exposant les différents modèles (et les articles scientifiques associés). Nous résumerons ici ces différents modèles afin de montrer notre niveau compréhension de ceux-ci. 
 
 \paragraph{T5-11B} Ce modèle
 
@@ -128,25 +128,25 @@ Afin d'approfondir nos connaissances quant aux modèles qui constituent l'état 
 
 \subsection{Définition de l'algorithme/méthode/technique}
 
-Afin de favoriser un environnement collaboratif optimal, nous avons décidé d’utiliser la plateforme colab.research de Google. En plus de permettre le travail collaboratif, cet environnement nous donne accès gratuitement à des cartes graphiques de très bonne qualités. Par la suite, nous avons entamé une revue de la littérature afin de bien comprendre où en était l’état de l’art sur la tâche STS-B. Nous nous sommes rendu compte que le modèle ROBERTA est capable d’atteindre des taux de prédiction de 92 % \cite{roberta}. De plus, notre revue de la littérature nous a permis de mettre 
+Afin de favoriser un environnement collaboratif optimal, nous avons décidé d’utiliser la plateforme colab.research de Google. En plus de permettre un travail collaboratif, cet environnement nous donne accès, gratuitement, à des cartes graphiques de très bonne qualités. Par la suite, nous avons entamé une revue de la littérature afin de bien comprendre où en était l’état de l’art sur la tâche STS-B. Nous nous sommes rendu compte que le modèle RoBERTa est capable d’atteindre des taux de prédiction de 92\% \cite{roberta}. De plus, notre revue de la littérature nous a permis de mettre 
 
 
 \subsubsection{Stacking des models}
 
-A ce stade, nous avons donc 3 modèles, issus du fine-tuning de models state-of-the-art. Nous avons alors tente une methode de stacking, pour combiner les resultats des trois modeles. Notre intuition était que les modeles devaient apprendre differement, et qu'en combinant leurs predictions nous ameliorerions leurs resultats.
+A ce stade, nous avons donc 3 modèles, issus du fine-tuning de models state-of-the-art. Nous avons alors tenté une méthode de stacking, pour combiner les résultats des trois modèles. Notre intuition était que les modèles devaient apprendre différemment, et qu'en combinant leurs predictions nous améliorerions leurs résultats.
 
-Nous avons tenté 2 approches différentes pour reunir les models:
+Nous avons tenté 2 approches différentes pour réunir les models:
 
 \begin{itemize}
-  \item Faire une moyenne des predictions des modeles;
-  \item Entrainer un réseau de neurones fast-forward, avec comme entrée les prédictions des autres modèles.
+  \item Faire une moyenne des predictions des modèles;
+  \item Entraîner un réseau de neurones fast-forward, avec comme entrée les prédictions des autres modèles.
 \end{itemize}
 
-La première methode envisagé ne nécessitant pas plus d'explications, nous allons nous attarder sur la seconde.
+La première méthode envisagée ne nécessitant pas plus d'explications, nous allons nous attarder sur la seconde.
 
-\paragraph{Méthodologie} Nous avons divisé nos données en deux ensembles: un premier, plus volumineux, sur lequel nous avons entrainé les 3 models SOTA, et un second, plus petit, sur lequel nous avons prédits les resultats des 3 sous-models, avant d'utiliser ces prédictions pour entrainer le modèle de stacking.
+\paragraph{Méthodologie} Nous avons divisé nos données en deux ensembles: un premier, plus volumineux, sur lequel nous avons entraîné les 3 models SOTA, et un second, plus petit, sur lequel nous avons prédits les résultats des 3 sous-models, avant d'utiliser ces prédictions pour entraîner le modèle de stacking.
 
-\paragraph{Architecture} Nous avons utilisé un modèle assez simple, avec une couche cachée (figure \ref{fig:stacking:archi}). Notre intention étant d'avoir un modèle non-linéaire (sinon cela revenait à faire une moyenne pondérée), mais pas trop complexe, afin de pouvoir entrainer le modèle avec peu de données sans risque d'overfitting.
+\paragraph{Architecture} Nous avons utilisé un modèle assez simple, avec une couche cachée (figure \ref{fig:stacking:archi}). Notre intention étant d'avoir un modèle non-linéaire (sinon cela revenait à faire une simple moyenne pondérée), mais pas trop complexe, afin de pouvoir entraîner le modèle avec peu de données, sans risque d'overfitting.
 
 \begin{figure}
 \begin{center}
@@ -205,7 +205,7 @@ La première methode envisagé ne nécessitant pas plus d'explications, nous all
 
 Nous avons utilisé la corrélation de Spearman sur les données de validations pour l’évaluation. Puisque qu’il y a deux étapes d'entraînement, nous nous sommes assurés que l’ensemble d'entraînement pour chacune des étapes était différent. Pour les modèles individuels, nous avons séparé les données en ensembles d'entraînement et de validation. Une fois le fine tuning terminé, nous avons utilisé ces modèles pour générer des prédictions sur l’ensemble validation. Ces prédictions sont maintenant les données d'entraînement pour le modèle de stacking. La séparation des données au premier entraînement est donc un hyperparamètre pour la deuxième étape puisqu’il influence le nombre d’échantillons disponible à l'entraînement de la deuxième étape. Nous avons expérimenté avec des divisions variantes entre 90-10 et 70-10, mais les résultats ne montraient pas une variation significative. 
 
-	L’utilisation du stacking était basé sur l’hypothèse suivante: il est possible d’apprendre à partir des prédictions de plusieurs modèles. En effet, nous croyons qu’il existe un comportement caché derrière ces prédictions. Nous avons effectué différent tests afin d’affirmer cette hypothèse. Tout d'abord, est-ce que le stacking infère de meilleurs résultats que les modèles individuels. Ce test fut un succès, nous avons obtenus un gain de performance de plus de deux pourcents par rapport au meilleur modèle, soit Roberta. Par contre, le deuxième test nous a montré que l'entraînement du stacking était superflu. Nous avons fait un second modèle d’ensemble où il suffisait de calculer la moyenne des prédictions faites par nos trois modèles. Avec les mêmes configurations, nous avons obtenu une corrélation de Spearman supérieure de moins de un pourcent. Nous avons conclu que le comportement décrit par l’apprentissage du stacking était simplement la moyenne.
+	L’utilisation du stacking était basé sur l’hypothèse suivante: il est possible d’apprendre à partir des prédictions de plusieurs modèles. En effet, nous croyons qu’il existe un comportement caché derrière ces prédictions. Nous avons effectué différent tests afin d’affirmer cette hypothèse. Tout d'abord, nous voulions tester si le stacking inférait de meilleurs résultats que les modèles individuels. Ce test fut un succès, nous avons obtenus un gain de performance de 1.5 points par rapport au meilleur modèle (RoBERTa). Néanmoins, le deuxième test nous a montré que l'entraînement du stacking était superflu. En effet, nous avons fait un second modèle d’ensemble où on calculait la moyenne des prédictions faites par nos trois modèles. Avec les mêmes configurations, nous avons obtenu une corrélation de Spearman légèrement supérieure. Nous avons conclu que le comportement décrit par l’apprentissage du stacking était simplement la moyenne.
 
 
 
@@ -267,9 +267,9 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
 %
 \subsubsection{BERT}
 
-\paragraph{Hugging Face} Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, nous avons utilisé la librairie transformers(\cite{huggingface}). Cette librairie nous permet de recupérer un modèle state-of-the-art avec ces poids pré-entraînés sur des corpus énormes, et de le fine-tuner avec des nouvelles données, et une nouvelle tâche.
+\paragraph{Hugging Face} Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, nous avons utilisé la librairie transformers(\cite{huggingface}). Cette librairie nous permet de récupérer un modèle state-of-the-art avec ses poids pré-entraînés sur des corpus énormes, et de le fine-tuner avec des nouvelles données, sur une nouvelle tâche.
 
-\paragraph{Training} Nous avons donc fine-tuné BERT, en l'entrainant sur 13 epoques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
+\paragraph{Training} Nous avons donc fine-tuné BERT, en l'entrainant sur 13 époques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/bert-training.png}
@@ -310,20 +310,20 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
 \paragraph{Resultats} On obtient, avec XLNet, un score similaire à celui de BERT, avec une corrélation de 0.884 (table \ref{table:models:results}) sur l'ensemble de test. Nous pensons que la taille du modèle le rends plus complexe à entraîner, mais qu'il pourrait avoir plus de potentiel si on l'entrainait plus longtemps, et avec plus de données.
 
 %
-\subsubsection{Moyenne des modeles}
+\subsubsection{Moyenne des modèles}
 
-Maintenant que nous avons 3 modèles très performants, issus du state-of-the-art, nous avons essayé de faire la moyenne des prédictions de ses modèles. Nous obtenons alors (table \ref{table:models:results}) d'excellents résultats, avec une corrélation de spearman sur l'ensemble de test de 0.906, ce qui nous fait gagner 0.015 points par rapport à RoBERTa, sur la corrélation de Spearman. On soulèvera que le défault de cette méthode est le temps de training (il faut entrainer les 3 modeles SOTA précédents), la taille des 3 modèles, et le temps d'inférence (il faut faire passer les phrases par chacun des 3 sous modèles).
+Maintenant que nous avons 3 modèles très performants, issus du state-of-the-art, nous avons essayé de faire la moyenne des prédictions de ses modèles. Nous obtenons alors (table \ref{table:models:results}) d'excellents résultats, avec une corrélation de spearman sur l'ensemble de test de 0.906, ce qui nous fait gagner 0.015 points par rapport à RoBERTa, sur la corrélation de Spearman. On soulèvera que le défaut de cette méthode est le temps de training (il faut entraîner les 3 modèles SOTA précédents), la taille des 3 modèles, et le temps d'inférence (il faut faire passer les phrases par chacun des 3 sous modèles).
 
 %
 \subsubsection{Stacking}
 
-Nous avons ensuite essayé d'entrainer un modèle de réseaux de neuronnes fast-forward, avec une couche cachée de 16 neuronnes, à prédire la bonne valeur d'après les sorties des 3 sous modèles.
+Nous avons ensuite essayé d'entrainer un modèle de réseaux de neuronnes fast-forward, avec une couche cachée de 16 neurones, à prédire la bonne valeur d'après les sorties des 3 sous modèles.
 
-Pour ce faire, nous avons coupé le dataset d'entrainement en 3: 90\% du set étant utilisé pour fine-tuner séparément les 3 models SOTA, 90\% des données restantes (qu'aucun des 3 sous models n'a donc jamais vu) pour entrainer le model de stacking, le reste étant utilisé comme set de validation.
+Pour ce faire, nous avons coupé le dataset d'entrainement en 3: 90\% du set étant utilisé pour fine-tuner séparément les 3 models SOTA, 90\% des données restantes (qu'aucun des 3 sous modèles n'a donc jamais vu) pour entraîner le modèle de stacking, le reste étant utilisé comme set de validation.
 
 Nous obtenons de très bons résultats (table \ref{table:models:results}) sur les données de tests, avec une corrélation de spearman de 0.903. On remarque que ce score est plus grand que celui de validation: c'est parce qu'on a gardé très peu de données de validation. On aurait pu en prendre plus, mais au détriment soit de l'entrainement des sous modèles, soit de celui de stacking. Etant donné qu'il nous était possible de tester notre performance sur les données de test, nous n'avons pas jugé utile de le faire.
 
-Nous avons ensuite essayé de changer la répartition des données entre l'entrainement des sous modèles et le stacking, pour passer à un 70\%-30\%. Cela n'a pas amélioré les résultats (table \ref{table:models:results}), confirmant notre hypothèse qu'il ne faut pas beaucoup de données pour entrainer le stacking, mais qu'il en faut beaucoup pour fine-tuner les sous modèles.
+Nous avons ensuite essayé de changer la répartition des données entre l'entrainement des sous modèles et le stacking, pour passer à un 70\%-30\%. Cela n'a pas amélioré les résultats (table \ref{table:models:results}), confirmant notre hypothèse qu'il ne faut pas beaucoup de données pour entraîner le stacking, mais qu'il en faut beaucoup pour fine-tuner les sous modèles.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/stack-30-training.png}
@@ -343,7 +343,7 @@ Nous avons ensuite essayé de changer la répartition des données entre l'entra
 %
 \subsubsection{Travaux futurs}
 
-Une piste qui pourrait etre envisagée, mais que nous n'avons pas pu essayer, est d'utiliser les dernières couches cachées des 3 sous models pour entrainer le modèle de stacking, au lieu de leur sortie (Fig.\ref{fig:stacking:archi_future}). On peut initialiser les poids de départ du réseau en concatenant ceux des sous modeles utilises, divises par le nombre de sous modeles (eq \ref{eq:stacking:future}); ainsi, le modele commence par predire la moyenne des sous modeles.
+Une piste qui pourrait être envisagée, mais que nous n'avons pas pu essayer, est d'utiliser les dernières couches cachées des 3 sous modèles pour entraîner le modèle de stacking, au lieu de leur sortie (Fig.\ref{fig:stacking:archi_future}). On peut initialiser les poids de départ du réseau en concaténant ceux des sous modèles utilisés, et en les divisant par le nombre de sous modèles (eq \ref{eq:stacking:future}); ainsi, le modèle commence par prédire la moyenne des sous modèles.
 
 \begin{equation}
   h \leftarrow [h_{BERT} h_{RoBERTa} h_{XLNet}] / 3 \label{eq:stacking:future}
