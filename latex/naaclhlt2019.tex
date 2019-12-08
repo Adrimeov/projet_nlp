@@ -246,18 +246,18 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
  Modèle & Spearman & Spearman & Temps \\[0.5ex]
  & x100 (val) & x100 (test) & (h) \\
  \hline\hline
- BERT     &  & 87.7 &  \\
+ BERT     & 88.2 & 87.7 & 1.5 \\
  \hline
- RoBERTa  &  & 89.1 &  \\
+ RoBERTa  & 90.2 & 89.1 & 1.5 \\
  \hline
- XLNet    &  & 88.4 & 3 \\
+ XLNet    & 89.1 & 88.4 & 3 \\
  \hline
- Moyenne  &  & \textbf{90.6} &  \\
+ Moyenne  & 88.0 & \textbf{90.6} & 6 \\
  \hline
- Stacking &  & 90.3 &  \\
+ Stacking & 88.1 & 90.3 & 6 \\
  (90-10)  & & & \\
  \hline
- Stacking & 87.2 & 90.0 &  \\
+ Stacking & 87.2 & 90.0 & 4.5 \\
  (70-30)  &  & & \\
  \hline
  \hline
@@ -270,11 +270,11 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
 
 Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, nous avons utilisé la librairie transformers(\cite{huggingface}). Cette librairie nous permet de récupérer un modèle state-of-the-art avec ses poids pré-entraînés sur des corpus énormes, et de le fine-tuner avec des nouvelles données, sur une nouvelle tâche.
 
-Nous avons donc fine-tuné BERT, en l'entrainant sur 13 époques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:BERT:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
+Nous avons donc fine-tuné BERT, en l'entrainant sur 22 époques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:BERT:finetunning}, il suffit d'une vingtaine) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/BERT-training.png}
-  \caption{BERT fine-tuning over 13 epochs}
+  \caption{BERT fine-tuning over 30 epochs}
   \label{fig:BERT:finetunning}
 \end{figure}
 
@@ -285,11 +285,11 @@ On obtient, avec BERT, un score très élevé, avec une corrélation sur les don
 
 Nous avons ensuite cherché à fine-tuner RoBERTa, version améliorée de BERT, en utilisant encore une fois la librairie transformers(\cite{huggingface}).
 
-Nous avons donc fine-tuné RoBERTa, en l'entrainant cette fois sur 10 époques, avec des batches de taille 8. Comme on peut le voire figure \ref{fig:BERT:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
+Nous avons donc fine-tuné RoBERTa, en l'entrainant cette fois sur 13 époques, avec des batches de taille 8. Comme on peut le voire figure \ref{fig:BERT:finetunning}, il suffit d'une dizaine d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/RoBERTa-training.png}
-  \caption{RoBERTa fine-tuning over 10 epochs}
+  \caption{RoBERTa fine-tuning over 30 epochs}
   \label{fig:RoBERTa:finetunning}
 \end{figure}
 
@@ -300,11 +300,11 @@ On obtient, avec RoBERTa, un score légèrement meilleur que pour BERT, avec une
 
 Nous avons ensuite cherché à fine-tuner XLNet en utilisant à nouveau la librairie transformers(\cite{huggingface}).
 
-Nous avons donc fine-tuné XLNet, en l'entrainant sur X époques. Comme on peut le voire figure \ref{fig:XLNet:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, plus de 2h (table \ref{table:models:results}), XLNet étant beaucoup plus gros que BERT et RoBERTa.
+Nous avons donc fine-tuné XLNet, en l'entrainant sur 24 époques. Comme on peut le voire figure \ref{fig:XLNet:finetunning}, il suffit d'une vingtaine d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, plus de 2h (table \ref{table:models:results}), XLNet étant beaucoup plus gros que BERT et RoBERTa.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/XLNet-training.png}
-  \caption{XLNet fine-tuning over 10 epochs}
+  \caption{XLNet fine-tuning over 30 epochs}
   \label{fig:XLNet:finetunning}
 \end{figure}
 
@@ -318,7 +318,7 @@ Maintenant que nous avons 3 modèles très performants, issus du state-of-the-ar
 %
 \subsubsection{Stacking}
 
-Nous avons ensuite essayé d'entrainer un modèle de réseaux de neuronnes fast-forward, avec une couche cachée de 16 neurones, à prédire la bonne valeur d'après les sorties des 3 sous modèles.
+Nous avons ensuite essayé d'entrainer un modèle de réseaux de neurones fast-forward, avec une couche cachée de 16 neurones, à prédire la bonne valeur d'après les sorties des 3 sous modèles.
 
 Pour ce faire, nous avons coupé le dataset d'entrainement en 3: 90\% du set étant utilisé pour fine-tuner séparément les 3 models SOTA, 90\% des données restantes (qu'aucun des 3 sous modèles n'a donc jamais vu) pour entraîner le modèle de stacking, le reste étant utilisé comme set de validation.
 
@@ -397,6 +397,10 @@ Une piste qui pourrait être envisagée, mais que nous n'avons pas pu essayer, e
 \caption{Architecture du modèle de stacking sur les dernières couches cachées} \label{fig:stacking:archi_future}
 \end{center}
 \end{figure}
+
+\subsubsection{Conclusion}
+
+Nous avons pu nous rendre compte, grâce à ce travail, de l'efficacité des modèles SOTA pour la tâche STS. Il nous est également apparu que les différents modèles n'apprennent pas exactement les mêmes informations, et qu'ils n'échouent pas aux mêmes endroits. Faire un ensemble à partir de ces modèles permet donc d'obtenir de meilleurs résultats, en exploitant les forces des différents modèles. Néanmoins, nous n'avons pas réussi à faire mieux qu'une simple moyenne des résultats. Nous pensons que le problème vient de la taille des données restantes pour entraîner le modèle de stacking, et qu'il serait possible d'obtenir de meilleurs résultats avec plus de données.
 
 \section*{Acknowledgments}
  
