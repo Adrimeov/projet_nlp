@@ -310,15 +310,6 @@ Pour mesurer la performance de nos modèles, nous utilisons, comme proposé, la 
 
 Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, nous avons utilisé la librairie transformers(\cite{huggingface}). Cette librairie nous permet de récupérer un modèle state-of-the-art avec ses poids pré-entraînés sur des corpus énormes, et de le fine-tuner avec des nouvelles données, sur une nouvelle tâche.
 
-<<<<<<< HEAD
-%\paragraph{Training} Nous avons donc fine-tuné BERT, en l'entrainant sur 13 epoques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (#TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
-
-%\begin{figure}
-%  \includegraphics[width=\linewidth]{bert-training.png}
-%  \caption{BERT fine-tuning over 13 epochs}
-%  \label{fig:bert:finetunning}
-%\end{figure}
-=======
 Nous avons donc fine-tuné BERT, en l'entrainant sur 22 époques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:BERT:finetunning}, il suffit d'une vingtaine) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
@@ -326,7 +317,6 @@ Nous avons donc fine-tuné BERT, en l'entrainant sur 22 époques, avec des batch
   \caption{BERT fine-tuning over 30 epochs}
   \label{fig:BERT:finetunning}
 \end{figure}
->>>>>>> 179ce39cff8d7436502f3b81a03a60c570abbb2a
 
 On obtient, avec BERT, un score très élevé, avec une corrélation sur les données de test de .877 (table \ref{table:models:results}).
 
@@ -352,19 +342,11 @@ Nous avons ensuite cherché à fine-tuner XLNet en utilisant à nouveau la libra
 
 Nous avons donc fine-tuné XLNet, en l'entrainant sur 24 époques. Comme on peut le voire figure \ref{fig:XLNet:finetunning}, il suffit d'une vingtaine d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, plus de 2h (table \ref{table:models:results}), XLNet étant beaucoup plus gros que BERT et RoBERTa.
 
-<<<<<<< HEAD
-%\begin{figure}
-%  \includegraphics[width=\linewidth]{resources/xlnet-training.png}
-%  \caption{XLNet fine-tuning over 10 epochs}
-%  \label{fig:xlnet:finetunning}
-%\end{figure}
-=======
 \begin{figure}
   \includegraphics[width=\linewidth]{resources/xlnet-training.png}
   \caption{XLNet fine-tuning over 30 epochs}
   \label{fig:XLNet:finetunning}
 \end{figure}
->>>>>>> 179ce39cff8d7436502f3b81a03a60c570abbb2a
 
 On obtient, avec XLNet, un score similaire à celui de BERT, avec une corrélation de 0.884 (table \ref{table:models:results}) sur l'ensemble de test. Nous pensons que la taille du modèle le rends plus complexe à entraîner, mais qu'il pourrait avoir plus de potentiel si on l'entrainait plus longtemps, et avec plus de données.
 
