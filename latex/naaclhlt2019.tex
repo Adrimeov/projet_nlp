@@ -135,20 +135,14 @@ Afin d'approfondir nos connaissances quant aux modèles qui constituent l'état 
 	\end{table}
 
 
-
-\subsection{Définition de l'algorithme/méthode/technique}
-
-Afin de favoriser un environnement collaboratif optimal, nous avons décidé d’utiliser la plateforme colab.research de Google. En plus de permettre un travail collaboratif, cet environnement nous donne accès, gratuitement, à des cartes graphiques de très bonne qualités. Par la suite, nous avons entamé une revue de la littérature afin de bien comprendre où en était l’état de l’art sur la tâche STS-B. Nous nous sommes rendu compte que le modèle RoBERTa est capable d’atteindre des taux de prédiction de 92\% \cite{RoBERTa}. De plus, notre revue de la littérature nous a permis de mettre 
-
-
-\subsubsection{RoBERTa}
+\paragraph{RoBERTa}
 
 RoBERTa~\cite{RoBERTa} est construit sur le même modèle que BERT, à quelques notables exceptions près. Tout d'abord, la tâche de prédiction de la phrase suivante, utilisée pour entraîner BERT, a été retirée. La taille des batches a été augmentée, de même que le taux d'apprentissage. De plus, RoBERTa a été entraîné sur beaucoup plus de données que BERT (144GB, là où BERT a été entraîné sur "seulement" 16GB de données), pendant plus longtemps. Ce modèle est venu améliorer l'état de l'art sur de nombreuses taches de TAL.
 
 De même que pour BERT, nous avons utilisé une version pré-entraînée de RoBERTa, à laquelle nous avons rajouté une dernière couche fast-forward, que nous avons fine-tuné pour notre problème.
 
 
-\subsubsection{XLNet}
+\paragraph{XLNet}
 
 XLNet~\cite{yang2019xlnet} est venu introduire d'autres modifications à BERT, afin d'améliorer le modèle et son entraînement.
 
@@ -167,6 +161,8 @@ XLNet cherche à prédire les mots selon l'ordre de la permutation. Si on consid
 De plus, XLNet encode l'information de position des tokens. Cette information est ensuite utilisée par le transformer, pour utiliser uniquement les embeddings des tokens qui précèdent celui a prédire, modifiant ainsi le système d'attention.
 
 Nous avons là aussi utilisé une version pré-entraînée de RoBERTa, avec une dernière couche fast-forward ajoutée.
+
+\subsection{Définition de l'algorithme/méthode/technique}
 
 \subsubsection{Stacking des models}
 
@@ -238,7 +234,7 @@ Nous avons utilisé un modèle assez simple, avec une couche cachée (figure \re
 \end{center}
 \end{figure}
 
-\subsection{Évaluation expérimentale }
+\section{Évaluation expérimentale }
 
 Nous avons utilisé la corrélation de Spearman sur les données de validations pour l’évaluation. Puisque qu’il y a deux étapes d'entraînement, nous nous sommes assurés que l’ensemble d'entraînement pour chacune des étapes était différent. Pour les modèles individuels, nous avons séparé les données en ensembles d'entraînement et de validation. Une fois le fine tuning terminé, nous avons utilisé ces modèles pour générer des prédictions sur l’ensemble validation. Ces prédictions sont maintenant les données d'entraînement pour le modèle de stacking. La séparation des données au premier entraînement est donc un hyperparamètre pour la deuxième étape puisqu’il influence le nombre d’échantillons disponible à l'entraînement de la deuxième étape. Nous avons expérimenté avec des divisions variantes entre 90-10 et 70-10, mais les résultats ne montraient pas une variation significative. 
 
@@ -381,8 +377,7 @@ Nous avons ensuite essayé de changer la répartition des données entre l'entra
 
 \section{Travaux futurs et conclusion }
 
-%
-\subsubsection{Travaux futurs}
+\subsection{Travaux futurs}
 
 Une piste qui pourrait être envisagée, mais que nous n'avons pas pu essayer, est d'utiliser les dernières couches cachées des 3 sous modèles pour entraîner le modèle de stacking, au lieu de leur sortie (Fig.\ref{fig:stacking:archi_future}). On peut initialiser les poids de départ du réseau en concaténant ceux des sous modèles utilisés, et en les divisant par le nombre de sous modèles (eq \ref{eq:stacking:future}); ainsi, le modèle commence par prédire la moyenne des sous modèles.
 
@@ -438,7 +433,7 @@ Une piste qui pourrait être envisagée, mais que nous n'avons pas pu essayer, e
 \end{center}
 \end{figure}
 
-\subsubsection{Conclusion}
+\subsection{Conclusion}
 
 Nous avons pu nous rendre compte, grâce à ce travail, de l'efficacité des modèles SOTA pour la tâche STS. Il nous est également apparu que les différents modèles n'apprennent pas exactement les mêmes informations, et qu'ils n'échouent pas aux mêmes endroits. Faire un ensemble à partir de ces modèles permet donc d'obtenir de meilleurs résultats, en exploitant les forces des différents modèles. Néanmoins, nous n'avons pas réussi à faire mieux qu'une simple moyenne des résultats. Nous pensons que le problème vient de la taille des données restantes pour entraîner le modèle de stacking, et qu'il serait possible d'obtenir de meilleurs résultats avec plus de données.
 
