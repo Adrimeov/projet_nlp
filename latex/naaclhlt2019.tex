@@ -304,7 +304,7 @@ Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, n
 Nous avons donc fine-tuné BERT, en l'entrainant sur 22 époques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:BERT:finetunning}, il suffit d'une vingtaine) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{resources/BERT-training.png}
+  \includegraphics[width=\linewidth]{resources/bert-training.png}
   \caption{BERT fine-tuning over 30 epochs}
   \label{fig:BERT:finetunning}
 \end{figure}
@@ -319,7 +319,7 @@ Nous avons ensuite cherché à fine-tuner RoBERTa, version améliorée de BERT, 
 Nous avons donc fine-tuné RoBERTa, en l'entrainant cette fois sur 13 époques, avec des batches de taille 8. Comme on peut le voire figure \ref{fig:BERT:finetunning}, il suffit d'une dizaine d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{resources/RoBERTa-training.png}
+  \includegraphics[width=\linewidth]{resources/roberta-training.png}
   \caption{RoBERTa fine-tuning over 30 epochs}
   \label{fig:RoBERTa:finetunning}
 \end{figure}
@@ -334,7 +334,7 @@ Nous avons ensuite cherché à fine-tuner XLNet en utilisant à nouveau la libra
 Nous avons donc fine-tuné XLNet, en l'entrainant sur 24 époques. Comme on peut le voire figure \ref{fig:XLNet:finetunning}, il suffit d'une vingtaine d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, plus de 2h (table \ref{table:models:results}), XLNet étant beaucoup plus gros que BERT et RoBERTa.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{resources/XLNet-training.png}
+  \includegraphics[width=\linewidth]{resources/xlnet-training.png}
   \caption{XLNet fine-tuning over 30 epochs}
   \label{fig:XLNet:finetunning}
 \end{figure}
@@ -418,7 +418,7 @@ Une piste qui pourrait être envisagée, mais que nous n'avons pas pu essayer, e
   \textbf{h}} (score);
 
   \draw[to] (BERT) -- node[midway,left] {f11 | ... | f1b} (features);
-  \draw[to] (RoBERTa) -- node[midway,middle] {f21 | ... | f2r} (features);
+  \draw[to] (RoBERTa) -- node[midway] {f21 | ... | f2r} (features);
   \draw[to] (XLNet) -- node[midway,right] {f31 | ... | f3x} (features);
 
   \draw[to] (sentences) -- (BERT);
