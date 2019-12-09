@@ -108,9 +108,18 @@ Le but de l’exercice est de définir un modèle afin de prédire la similarit�
 \subsection{Revue de la littérature et état de l'art}
 Afin d'approfondir nos connaissances quant aux modèles qui constituent l'état de l'art actuelle, nous avons réalisé une revue de la littérature concernant la tâche Semantic Textual Similarity (STS). Pour ce faire, nous avons débuté nos recherches sur l'excellente base de donnée "paper with code" \cite{sota}. Ce site web permet de spécifier un jeux de donné utilisé en NLP et de générer automatiquement un leaderboard exposant les différents modèles ( et les articles scientifiques associés). Nous résumerons ici ces différents modèles afin de montrer notre niveau compréhension de ceux-ci. 
 
-\paragraph{T5-11B} Ce modèle
+\paragraph{ALBERT} Étant donné que ALBERT est une version plus légère de BERT, il est essentiel de tout d'abord se familiariser avec BERT. \textit{Bidirectional Encoder Representation from Transformers}(BERT) est le succéseur aux RNN et LSTM qui étaient, jusqu'à très récemment, les technologies les plus performantes dans le domaine de la traduction et la génération de texte. En effet BERT à rendu quasiement obselète ces anciennes technologie grâce à un nouveau mécanisme dénomé \textit{Transformer} \cite{attention}. Plus particulièrement, l'innovation qui est au coeur de cette nouvelle architecture a été dénommé l'attention. La figure 1 montre l'architecture originale du Transformer. Dans le cas particulier de BERT, ce qui nous intéresse se situe dans la 
+\begin{figure}
+	\includegraphics[width=\linewidth]{transformer.png}
+	\caption{L'encodeur et le décodeur qui composent le Transformer}
 
-
+\end{figure} 
+\begin{figure}
+	\includegraphics[width=\linewidth]{bert.jpg}
+	\caption{L'encodeur et le décodeur qui composent le Transformer}
+	
+\end{figure} 
+	
 	\begin{table}[]
 		\begin{tabular}{llll}
 			\hline
@@ -269,13 +278,13 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
 
 \paragraph{Hugging Face} Notre première experience a donc consisté à fine-tuner BERT. Pour ce faire, nous avons utilisé la librairie transformers(\cite{huggingface}). Cette librairie nous permet de recupérer un modèle state-of-the-art avec ces poids pré-entraînés sur des corpus énormes, et de le fine-tuner avec des nouvelles données, et une nouvelle tâche.
 
-\paragraph{Training} Nous avons donc fine-tuné BERT, en l'entrainant sur 13 epoques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (#TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
+%\paragraph{Training} Nous avons donc fine-tuné BERT, en l'entrainant sur 13 epoques, avec des batches de taille 16, à prédire le score de similarité entre 2 phrases. Comme on peut le voire figure \ref{fig:bert:finetunning}, il suffit d'une (#TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, environ 30 minutes (table \ref{table:models:results}).
 
-\begin{figure}
-  \includegraphics[width=\linewidth]{resources/bert-training.png}
-  \caption{BERT fine-tuning over 13 epochs}
-  \label{fig:bert:finetunning}
-\end{figure}
+%\begin{figure}
+%  \includegraphics[width=\linewidth]{bert-training.png}
+%  \caption{BERT fine-tuning over 13 epochs}
+%  \label{fig:bert:finetunning}
+%\end{figure}
 
 \paragraph{Resultats} On obtient, avec BERT, un score très élevé, avec une corrélation sur les données de test de .877 (table \ref{table:models:results}).
 
@@ -301,11 +310,11 @@ Nous avons utilisé la corrélation de Spearman sur les données de validations 
 
 \paragraph{Training} Nous avons donc fine-tuné XLNet, en l'entrainant sur X époques. Comme on peut le voire figure \ref{fig:xlnet:finetunning}, il suffit d'une (TODO) d'époques pour fine-tuner correctement le modèle. Cela nous prends, sur 1GPU, plus de 2h (table \ref{table:models:results}), XLNet étant beaucoup plus gros que BERT et RoBERTa.
 
-\begin{figure}
-  \includegraphics[width=\linewidth]{resources/xlnet-training.png}
-  \caption{XLNet fine-tuning over 10 epochs}
-  \label{fig:xlnet:finetunning}
-\end{figure}
+%\begin{figure}
+%  \includegraphics[width=\linewidth]{resources/xlnet-training.png}
+%  \caption{XLNet fine-tuning over 10 epochs}
+%  \label{fig:xlnet:finetunning}
+%\end{figure}
 
 \paragraph{Resultats} On obtient, avec XLNet, un score similaire à celui de BERT, avec une corrélation de 0.884 (table \ref{table:models:results}) sur l'ensemble de test. Nous pensons que la taille du modèle le rends plus complexe à entraîner, mais qu'il pourrait avoir plus de potentiel si on l'entrainait plus longtemps, et avec plus de données.
 
